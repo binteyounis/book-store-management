@@ -1,34 +1,54 @@
-// Import required packages
+// ------------------ IMPORT REQUIRED PACKAGES ------------------
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const path = require("path");
 
-// Create Express app
+// ------------------ CREATE EXPRESS APP ------------------
 const app = express();
 
-// Middleware
+// ------------------ MIDDLEWARE ------------------
 app.use(cors());
 app.use(bodyParser.json());
-app.use(express.static("public"));
 
-// PORT configuration (important for deployment)
+// Serve static files (CSS, JS, jQuery)
+app.use(express.static(path.join(__dirname, "public")));
+
+// ------------------ HOME ROUTE (MANDATORY FOR RAILWAY) ------------------
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "views", "index.html"));
+});
+
+// ------------------ PORT CONFIGURATION ------------------
 const PORT = process.env.PORT || 3000;
 
-// ------------------ Dummy Data ------------------
+// ------------------ DUMMY DATA ------------------
 
 // Users data
 let users = [];
 
 // Books data
 let books = [
-  { id: 1, title: "JavaScript Basics", author: "John Doe", category: "Programming", price: 500 },
-  { id: 2, title: "HTML & CSS", author: "Jane Smith", category: "Web", price: 400 }
+  {
+    id: 1,
+    title: "JavaScript Basics",
+    author: "John Doe",
+    category: "Programming",
+    price: 500
+  },
+  {
+    id: 2,
+    title: "HTML & CSS",
+    author: "Jane Smith",
+    category: "Web",
+    price: 400
+  }
 ];
 
 // Orders data
 let orders = [];
 
-// ------------------ APIs ------------------
+// ------------------ API ROUTES ------------------
 
 // User Registration
 app.post("/api/signup", (req, res) => {
@@ -77,7 +97,8 @@ app.get("/api/orders", (req, res) => {
   res.json(orders);
 });
 
-// ------------------ Server Start ------------------
+// ------------------ START SERVER ------------------
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
