@@ -1,54 +1,53 @@
-// ------------------ IMPORT REQUIRED PACKAGES ------------------
+// Import required packages
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const path = require("path");
 
-// ------------------ CREATE EXPRESS APP ------------------
+// Create Express app
 const app = express();
 
-// ------------------ MIDDLEWARE ------------------
+// Middleware
 app.use(cors());
 app.use(bodyParser.json());
 
 // Serve static files (CSS, JS, jQuery)
 app.use(express.static(path.join(__dirname, "public")));
 
-// ------------------ HOME ROUTE (MANDATORY FOR RAILWAY) ------------------
+// ------------------ PAGE ROUTES ------------------
+
+// Home page
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "views", "index.html"));
 });
 
-// ------------------ PORT CONFIGURATION ------------------
-const PORT = process.env.PORT || 3000;
+// Login page
+app.get("/login", (req, res) => {
+  res.sendFile(path.join(__dirname, "views", "login.html"));
+});
 
-// ------------------ DUMMY DATA ------------------
+// Signup page
+app.get("/signup", (req, res) => {
+  res.sendFile(path.join(__dirname, "views", "signup.html"));
+});
 
-// Users data
+// Admin page
+app.get("/admin", (req, res) => {
+  res.sendFile(path.join(__dirname, "views", "admin.html"));
+});
+
+// ------------------ Dummy Data ------------------
+
 let users = [];
 
-// Books data
 let books = [
-  {
-    id: 1,
-    title: "JavaScript Basics",
-    author: "John Doe",
-    category: "Programming",
-    price: 500
-  },
-  {
-    id: 2,
-    title: "HTML & CSS",
-    author: "Jane Smith",
-    category: "Web",
-    price: 400
-  }
+  { id: 1, title: "JavaScript Basics", author: "John Doe", category: "Programming", price: 500 },
+  { id: 2, title: "HTML & CSS", author: "Jane Smith", category: "Web", price: 400 }
 ];
 
-// Orders data
 let orders = [];
 
-// ------------------ API ROUTES ------------------
+// ------------------ APIs ------------------
 
 // User Registration
 app.post("/api/signup", (req, res) => {
@@ -62,11 +61,7 @@ app.post("/api/login", (req, res) => {
     u => u.email === req.body.email && u.password === req.body.password
   );
 
-  if (user) {
-    res.json({ success: true });
-  } else {
-    res.json({ success: false });
-  }
+  res.json({ success: !!user });
 });
 
 // Fetch Books
@@ -97,7 +92,9 @@ app.get("/api/orders", (req, res) => {
   res.json(orders);
 });
 
-// ------------------ START SERVER ------------------
+// ------------------ Server Start ------------------
+
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
